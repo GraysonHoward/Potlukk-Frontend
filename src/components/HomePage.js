@@ -1,3 +1,5 @@
+import ItemDisplayTable from "./ItemDisplayTable";
+
 export default function HomePage(){
 
     function StartPage(){
@@ -7,6 +9,7 @@ export default function HomePage(){
     return(
         <>
             <StartPage />
+            <ItemDisplayTable value="4"/>
         </>
     )
 }

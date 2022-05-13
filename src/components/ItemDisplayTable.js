@@ -1,20 +1,28 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 
 export default function ItemDisplayTable(id){
 
-    cosnt [items, setItems] = useState([]);
-    const userInfo = JSON.parse(sessionStorage.getItem(""))
+    const [items, setItems] = useState([]);
+    const userInfo = JSON.parse(sessionStorage.getItem(""));
+    const [potlukk, setPotlukk] = useState({});
 
     //Get data from backend
     async function getItemsForPotlukk(){
-        const response = await fetch(`localhost:8080/potlukks/${id}/items`);
+        const response = await fetch(`localhost:8080/potlukks/${id.value}/items`);
         const body = await response.json();
         setItems(body)
     }
 
+    async function getPotlukk(){
+        const response = await fetch(`localhost:8080/potlukks/${id.value}`);
+        const body = await response.json();
+        setPotlukk(body)
+    }
+
     useEffect(()=>{
         getItemsForPotlukk();
+        getPotlukk();
     },[]);
 
     
@@ -36,7 +44,14 @@ export default function ItemDisplayTable(id){
         return display
     }
     function deleteItem(){
-
+        let deleteButton;
+        if(potlukk.id===userInfo.uid){
+            deleteButton = <button>Delete</button>
+        }
+        else{
+            deleteButton = ""
+        }
+        return deleteButton
     }
 
     return(<>
