@@ -58,6 +58,7 @@ export default function ItemDisplayTable(id){
     }
 
     return(<>
+        <h3>{potlukk.name} - {potlukk.epochTime}</h3>
         <table>
             <thead>
                 <tr>

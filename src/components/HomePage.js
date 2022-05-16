@@ -9,7 +9,6 @@ export default function HomePage(){
     return(
         <>
             <StartPage />
-            <ItemDisplayTable value="4"/>
         </>
     )
 }
