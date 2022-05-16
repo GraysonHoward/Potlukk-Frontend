@@ -29,28 +29,31 @@ export default function ItemDisplayTable(id){
     const itemRows = items.map(item =>
         <tr key={item.id}>
             <td>{item.name}</td>
-            <td><nameOrButton/></td>
+            <td><NameOrButton value={item.supplier}/></td>
             <td>{item.status}</td>
-            <td><deleteItem/></td>
+            <td><DeleteItem/></td>
         </tr>)
 
-    function nameOrButton(supplier){
+    function NameOrButton(supplier){
         let display;
-        if(supplier){
-            display = supplier;
+        if(supplier.value){
+            display = <>{supplier.value}</>;
         }else{
             display = <button>Sign Up!</button>
         }
         return display
     }
-    function deleteItem(){
+    function DeleteItem(){
         let deleteButton;
-        if(potlukk.id===userInfo.uid){
-            deleteButton = <button>Delete</button>
+        if(userInfo){
+            if(potlukk.hostID===userInfo.id){
+                deleteButton = <button>Delete</button>
+            }
+            else{
+                deleteButton = ""
+            }
         }
-        else{
-            deleteButton = ""
-        }
+
         return deleteButton
     }
 
