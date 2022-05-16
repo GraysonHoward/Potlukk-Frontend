@@ -5,15 +5,19 @@ export default function ItemDisplayTable(id){
     const [items, setItems] = useState([]);
     const userInfo = JSON.parse(sessionStorage.getItem("user"));
     const [potlukk, setPotlukk] = useState({});
-    const [showButton, setShowButton] = useState(true)
-    const [showSignUp, setShowSignUp] = useState(true)
+    const [showButton, setShowButton] = useState(true);
+    const [showSignUp, setShowSignUp] = useState(true);
+    // States for adding an item and signing up for one
+    const [itemID, setItemID] = useState("");
+    const [item, setItem] = useState("");
+    const [supplier, setSupplier] = useState("");
+    const [status, setStatus] = useState("");
 
     //Get data from backend
     async function getItemsForPotlukk(){
         const response = await fetch(`http://localhost:8080/potlukks/${id.value}/items`);
         const body = await response.json();
         setItems(body)
-        console.log(body)
     }
     async function getPotlukk(){
         const response = await fetch(`http://localhost:8080/potlukks/${id.value}`);
@@ -25,12 +29,6 @@ export default function ItemDisplayTable(id){
         getPotlukk();
     },[]);
 
-    // States for adding an item and signing up for one
-    const [itemID, setItemID] = useState("");
-    const [item, setItem] = useState("");
-    const [supplier, setSupplier] = useState("");
-    const [status, setStatus] = useState("");
-
     // Set state values
     function updateItemsetItem(event){
         setItem(event.target.value);
@@ -40,39 +38,19 @@ export default function ItemDisplayTable(id){
     }
 
     function addItemInput(){
-        let component;
-        if(userInfo.uId === -1){
-            component = <>
-                <label htmlFor="item">Item</label>
-                <input onChange={updateItemsetItem} name="item" value={item}/><br/>
-                setSupplier(userInfo.username)
-                <label htmlFor="WANTED">Wanted </label>
-                <input type="radio" onClick={() => setStatus("WANTED")}/><br/>
-                <label htmlFor="NEEDED">Needed </label>
-                <input type="radio" onClick={() => setStatus("NEEDED")}/><br/>
-                <label htmlFor="FULFILLED">Fulfilled </label>
-                <input type="radio" onClick={() => setStatus("FULFILLED")}/><br/>
-                <button onClick={addItem}>Add</button>
-            </>
-        }else{
-            component = <>
-                <label htmlFor="item">Item</label>
-                <input onChange={updateItemsetItem} type="text" value={item}/><br/>
-                <label htmlFor="Supplier">Supplier</label>
-                <input onChange={updateSupplier} value={supplier}/><br/>
-                <label htmlFor="WANTED">Wanted </label>
-                <input type="radio" onClick={() => setStatus("WANTED")}/><br/>
-                <label htmlFor="NEEDED">Needed </label>
-                <input type="radio" onClick={() => setStatus("NEEDED")}/><br/>
-                <label htmlFor="FULFILLED">Fulfilled </label>
-                <input type="radio" onClick={() => setStatus("FULFILLED")}/><br/>
-                <button onClick={addItem}>Add</button>
-            </>
-        }
-        return component;
+        return <fieldset>
+                <legend>Add a new item:</legend>
+                    <label htmlFor="item">Item </label>
+                    <input onChange={updateItemsetItem} type="text" value={item}/><br/>
+                    <label htmlFor="WANTED">Wanted </label>
+                    <input type="radio" onClick={() => setStatus("WANTED")}/> <br/>
+                    <label htmlFor="NEEDED">Needed </label>
+                    <input type="radio" onClick={() => setStatus("NEEDED")}/> <br/>
+                    <button onClick={addItem}>Add</button>
+            </fieldset>
     }
     async function addItem(){
-        const itemObj = {id:0, name:item, supplier:supplier, status:status, potlukkID:id.value}
+        const itemObj = {id:0, name:item, supplier:"", status:status, potlukkID:id.value}
 
         await fetch("http://localhost:8080/items",{
             body:JSON.stringify(itemObj),
@@ -84,62 +62,60 @@ export default function ItemDisplayTable(id){
         
         //dont do this
         getItemsForPotlukk()
-
-        setShowButton(false)
+        // Reset button
+        setShowButton(true)
     }
 
-    function SignUpInput(item_id){
-        if(userInfo.uId === -1){
-            setItemID(item_id);
+    function signUpInput(item_id){
+        if(userInfo.uId !== -1){
             setSupplier(userInfo.username);
-            signUp();
+            signUp(item_id);
         }
         else{
-            setItemID(item_id);
-            <>
-                <input onChange={updateItemsetItem} type="text" value={item}/>
-                <label htmlFor="Supplier">Supplier</label>
-                <button onClick={signUp}>Sign Up!</button>
+            return <>
+                <input onChange={updateSupplier} type="text" value={supplier} placeholder="Enter Name"/>
+                <button onClick={() => signUp(item_id)}>Sign Up!</button>
             </>
         }
     }
 
-    async function signUp(){
-        const item = {id:itemID, supplier:supplier, status:"FULFILLED", potlukkID:id}
+    async function signUp(item_id){
+        const itemObj = {id:item_id, supplier:supplier, status:"FULFILLED", potlukkID:id.value}
+        console.log(JSON.stringify(itemObj));
         await fetch(`http://localhost:8080/items/${itemID}`,{
-            body:JSON.stringify(item),
+            body:JSON.stringify(itemObj),
             method:"PUT",
             headers:{
                 "Content-Type":"application/json"
-            }     
+            }
         });
+        // Still bad don't do
         getItemsForPotlukk()
     }
 
-
     // Map items to table rows to display
     const itemRows = items.map(item =>
+
         <tr key={item.id}>
             <td>{item.name}</td>
-            <td><NameOrButton supplier={item.supplier} item_id={item.id}/></td>
+            <td>{nameOrButton(item.supplier, item.id)}</td>
             <td>{item.status}</td>
             <td><DeleteItem/></td>
         </tr>)
 
-
-    function NameOrButton(args){ // decide if we display a username or a sign up option
+    function nameOrButton(supplier, id){ // decide if we display a username or a sign up option
         let display;
-        if(args.supplier){
-            display = <>{args.supplier}</>;
+        if(supplier){
+            display = <>{supplier}</>;
         }else{
-            {(showSignUp) ? <button onClick={() => setShowSignUp(false)}>Sign Up!</button> : SignUpInput() }
+            display = <>{(showSignUp) ? <button id={id} onClick={() => setShowSignUp(false)}>Sign Up!</button> : signUpInput(id)}</>
         }
         return display
     }
     function DeleteItem(){ // Give option to delete item iff current user is potlukk owner
         let deleteButton;
         if(userInfo.uId === -1){
-            if(potlukk.hostID===userInfo.uId){
+            if(potlukk.hostID === userInfo.uId){
                 deleteButton = <button>Delete</button>
             }
             else{
@@ -163,7 +139,10 @@ export default function ItemDisplayTable(id){
                 {itemRows}
             </tbody>
         </table>
-        {(showButton) ? <button onClick={() => setShowButton(false)}>Add Item</button> : addItemInput() }
+
+        {
+        (showButton) ? <button onClick={() => setShowButton(false)}>Add Item</button> : addItemInput() 
+        }
         
     </>)
 }
