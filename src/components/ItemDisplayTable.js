@@ -9,13 +9,13 @@ export default function ItemDisplayTable(id){
 
     //Get data from backend
     async function getItemsForPotlukk(){
-        const response = await fetch(`localhost:8080/potlukks/${id.value}/items`);
+        const response = await fetch(`http://localhost:8080/potlukks/${id.value}/items`);
         const body = await response.json();
         setItems(body)
     }
 
     async function getPotlukk(){
-        const response = await fetch(`localhost:8080/potlukks/${id.value}`);
+        const response = await fetch(`http://localhost:8080/potlukks/${id.value}`);
         const body = await response.json();
         setPotlukk(body)
     }
