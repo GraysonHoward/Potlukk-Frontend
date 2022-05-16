@@ -7,19 +7,18 @@ import PotlukkCreationPage from './components/PotlukkCreationPage';
 import PotlukkHomePage from './components/PotlukkHomePage';
 import UserLoginPage from './components/UserLoginPage';
 import UserRegistrationPage from './components/UserRegistrationPage';
-
+import './potlukkhomepage.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
+    <Routes>
         <Route path='/login' element={<UserLoginPage/>}/>
         <Route path='/register' element={<UserRegistrationPage/>}/>
         <Route path='/potlukkcreation' element={<PotlukkCreationPage/>}/>
-        <Route path='/potlukks' element={<PotlukkHomePage/>}/>
+        <Route path='/potlukks' element={<PotlukkHomePage/>} />
         <Route path='/' element={<HomePage/>}/>
-
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
