@@ -11,7 +11,7 @@ body {
 .potlukk-popup{
     display: flex;
 }
-#potlukk-home, #potlukk-create{
+#potlukk-home, #potlukk-create, #login{
     background: rgba(230, 240, 255, .85);
     border-radius: 10px;
     border: 3px solid rgba(159, 5, 48, .9);
@@ -26,8 +26,12 @@ body {
 #potlukk-home {
     width: 70vw;
 }
-#potlukk-create {
+#potlukk-create, #login {
     width: 30vw;
+}
+#login {
+    margin-left: 10%;
+    margin-top: 32%;
 }
 #edit-potlukk-popup, #attend-potlukk-popup{
     flex-direction: column;

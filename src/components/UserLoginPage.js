@@ -9,30 +9,13 @@ export default function UserLoginPage(){
 
 
     const styles = {
-        h1DivStyle: {
-            position: 'absolute',
-            top: '32%',
-            left: '40%',
-            width: '250px',
-            height: '200px',
-            textAlign: 'center'
-        },
-
-        divStyle: {
-            border: '2px solid', 
-            position: 'absolute',
-            top: '40%',
-            left: '40%',
-            width: '250px',
-            height: '200px',
-          },
-
           labelStyle: {
               marginLeft: '20px'
           },
 
           loginButtonStyle: {
-              marginLeft: '52%'
+              marginLeft: '58%',
+              width: '50px'
           },
 
           guestButtonStyle: {
@@ -86,11 +69,10 @@ export default function UserLoginPage(){
 
     return(
         <>
-        <div style={styles.h1DivStyle}>
+        <div className="container">
+        <div id="login">
         <h1>Login</h1>
-        </div>
-        <div style={styles.divStyle}>
-            <p style = {{marginTop: '20%'}}>
+            <p >
                 <label style={styles.labelStyle} htmlFor="username">Username</label>
                 <input onChange={updateUsername} name="username" type="text"/>
             </p>
@@ -103,6 +85,7 @@ export default function UserLoginPage(){
                 <button style={styles.guestButtonStyle}  onClick={navigatePotlukksPageAsGuest} >Guest</button>
                 <button  style={styles.newUserButtonStyle} onClick={navigateNewUserPage} >New User</button>
             </p>
+        </div>
         </div>
         </>
     )
