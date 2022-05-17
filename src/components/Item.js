@@ -9,9 +9,11 @@ export default function Item(props){
     let hostId = props.props.host;
 
     async function signUp(){
+        const itemObj = {id:item.id, name: item.name, supplier: supplier, potlukkId: item.potlukkId}
+
         console.log(JSON.stringify(item));
         await fetch(`http://localhost:8080/items/${item.id}`,{
-            body:JSON.stringify(item),
+            body:JSON.stringify(itemObj),
             method:"PUT",
             headers:{
                 "Content-Type":"application/json"
