@@ -69,27 +69,27 @@ export default function PotlukkHomePage(){
             }
         }
         if(user.uId === btn.hostID) {
-            return(<button class="action-btn" onClick={() => action(true, btn.hostID)}>edit</button>)
+            return(<button className="action-btn" onClick={() => action(true, btn.hostID)}>edit</button>)
         } else {
-            return(<button class="action-btn" onClick={() => action(false, btn.hostID)}>attend</button>)
+            return(<button className="action-btn" onClick={() => action(false, btn.hostID)}>attend</button>)
         }
     }
 
     function EditPotlukk(btn) {
         const btnIndex = btn.index
         return(
-        <div class="potlukk-popup" id="edit-potlukk-popup">
-        <ItemDisplayTable value={potlukks[btnIndex].id} />
+        <div className="potlukk-popup" id="edit-potlukk-popup">
+        <ItemDisplayTable props={{value: potlukks[btnIndex].id, host: potlukks[btnIndex].hostID}} />
         <button onClick={() => setShowEdit(false)}>Cancel</button>
         </div>)
     }
 
     function AttendPotlukk(btn) {
         const btnIndex = btn.index
-        return(<div class="potlukk-popup" id="attend-potlukk-popup">
-        <ItemDisplayTable value={potlukks[btnIndex].id}/>
+        return(<td className="potlukk-popup" id="attend-potlukk-popup">
+        <ItemDisplayTable props={{value: potlukks[btnIndex].id, host: potlukks[btnIndex].hostID}}/>
         <button onClick={() => setShowAttend(false)}>Cancel</button>
-        </div>)
+        </td>)
     }
 
     function CreateNewPotlukk() {
@@ -97,7 +97,7 @@ export default function PotlukkHomePage(){
     }
 
     return(
-    <div class="container">
+    <div className="container">
 
             <div id="potlukk-home">
         <h1>Upcoming Potlukks</h1>
