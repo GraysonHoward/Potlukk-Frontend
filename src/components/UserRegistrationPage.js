@@ -43,9 +43,9 @@ export default function UserRegistrationPage(){
         }
     }
 
-    return(<>
-    
-    <h1>User Registration</h1>
+    return(
+        <div className="container">
+            <div id="registration">
         <fieldset>
             <legend>User Registration</legend>
             <label htmlFor="username">Username: </label>
@@ -61,5 +61,7 @@ export default function UserRegistrationPage(){
               Already registered? Login.
             </button>
         </Link>
-    </>)
+            </div>
+
+        </div>)
 }

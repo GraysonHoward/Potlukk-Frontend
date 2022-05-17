@@ -6,22 +6,6 @@ export default function HomePage(){
     const navigate = useNavigate()
 
     const styles = {
-        divStyle: {
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover' ,
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
-            width: '100vw',
-            height: '100vh'
-        },
-        navBoxStyle: {
-            position: 'absolute',
-            top: '55vh',
-            left: '55vw',
-            width: '250px',
-            height: '200px',
-        },
         buttonStyle: {
             fontSize: '32px',
             width: "100%",
@@ -48,7 +32,7 @@ export default function HomePage(){
 
         const registerBtn = <p><button onClick={signup} style={styles.buttonStyle}>Sign Up</button></p>
         return (
-            <div style= {styles.navBoxStyle}>
+            <div id="nav-box">
                 {viewPotlukksBtn}
                 {loginBtn}
                 {registerBtn}
@@ -56,7 +40,7 @@ export default function HomePage(){
         )
     }
     return(
-        <div style={styles.divStyle}>
+        <div className="container">
             <NavigationBox />
         </div>
     )
