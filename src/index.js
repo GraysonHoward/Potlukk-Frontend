@@ -7,7 +7,7 @@ import PotlukkCreationPage from './components/PotlukkCreationPage';
 import PotlukkHomePage from './components/PotlukkHomePage';
 import UserLoginPage from './components/UserLoginPage';
 import UserRegistrationPage from './components/UserRegistrationPage';
-import './potlukkhomepage.css'
+import './potlukkstyle.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
