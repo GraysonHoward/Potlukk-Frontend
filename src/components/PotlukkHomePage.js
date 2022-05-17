@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import ItemDisplayTable from "./ItemDisplayTable"
+
+function convertEpochToDate(epoch) {
+    const date = new Date(epoch*1000)
+    return date.toLocaleDateString()
+}
+
+function convertEpochToTime(epoch) {
+    const date = new Date(epoch*1000)
+    return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+}
 
 export default function PotlukkHomePage(){
 
@@ -8,7 +19,7 @@ export default function PotlukkHomePage(){
     const [showAttend, setShowAttend] = useState({id:0, show:false})
     const navigate = useNavigate()
 
-    const user = JSON.parse(sessionStorage.getItem('user'))
+    let user = JSON.parse(sessionStorage.getItem('user'))
 
     async function getAllPotlukks() {
         const response = await fetch('http://localhost:8080/potlukks')
@@ -21,15 +32,19 @@ export default function PotlukkHomePage(){
     },[]);
 
     function PotlukkRows() {
+        let btnIndex = 0
         return potlukks.map(p =>   
             <>
             <tr key={p.id}>
                 <td>{p.name}</td>
-                <td>{p.date}</td>
+                <td><div>
+                    <p id="date">{convertEpochToDate(p.epochTime)}</p>
+                    <p id="time">{convertEpochToTime(p.epochTime)}</p>
+                    </div></td>
                 <td><ButtonAction hostID={p.hostID} /></td>
             </tr>
             <tr id="action-row">
-                <ActionRow id={p.hostID}/>
+                <ActionRow id={p.hostID} index={btnIndex++}/>
             </tr>
             </>
             )
@@ -37,9 +52,9 @@ export default function PotlukkHomePage(){
 
     function ActionRow(button) {
         if(showEdit.show && (showEdit.id === button.id)) {  
-            return(<EditPotlukk />)
+            return(<EditPotlukk index={button.index}/>)
         } else if(showAttend.show && (showAttend.id === button.id)) {
-            return(<AttendPotlukk />)
+            return(<AttendPotlukk index={button.index}/>)
         }
     }
 
@@ -54,34 +69,31 @@ export default function PotlukkHomePage(){
             }
         }
         if(user.uId === btn.hostID) {
-            return(<button onClick={() => action(true, btn.hostID)}>edit</button>)
+            return(<button class="action-btn" onClick={() => action(true, btn.hostID)}>edit</button>)
         } else {
-            return(<button onClick={() => action(false, btn.hostID)}>attend</button>)
+            return(<button class="action-btn" onClick={() => action(false, btn.hostID)}>attend</button>)
         }
     }
 
-    function EditPotlukk() {
-        //const id = showEdit.id-1
+    function EditPotlukk(btn) {
+        const btnIndex = btn.index
         return(
         <div class="potlukk-popup" id="edit-potlukk-popup">
-        <h5>edit potlukk</h5>
+        <ItemDisplayTable value={potlukks[btnIndex].id} />
         <button onClick={() => setShowEdit(false)}>Cancel</button>
         </div>)
     }
 
-    function AttendPotlukk() {
-        let name = ""
-        if(user.uId > 0) {
-            name = user.username
-        }
+    function AttendPotlukk(btn) {
+        const btnIndex = btn.index
         return(<div class="potlukk-popup" id="attend-potlukk-popup">
-        <h5>attend potlukk</h5>
+        <ItemDisplayTable value={potlukks[btnIndex].id}/>
         <button onClick={() => setShowAttend(false)}>Cancel</button>
         </div>)
     }
 
     function CreateNewPotlukk() {
-        return (user.uID != -1) ? <button id="create-new-potlukk-btn" onClick={() => navigate('/potlukkcreation')}>create new potlukk</button> : null ;
+        return (user.uId === -1) ? null : <button id="create-new-potlukk-btn" onClick={() => navigate('/potlukkcreation')}>create new potlukk</button> ;
     }
 
     return(
